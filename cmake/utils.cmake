@@ -1,3 +1,5 @@
+set(CUDA_ARCHS 8.6          CACHE INTERNAL "Force only A6000 arch")
+return()                    # skip all the rest of this file
 #
 # Attempt to find the python package that uses the same python executable as
 # `EXECUTABLE` and is one of the `SUPPORTED_VERSIONS`.
