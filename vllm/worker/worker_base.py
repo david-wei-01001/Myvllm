@@ -558,6 +558,7 @@ class WorkerWrapperBase:
         if isinstance(self.vllm_config.parallel_config.worker_cls, str):
             worker_class = resolve_obj_by_qualname(
                 self.vllm_config.parallel_config.worker_cls)
+            print(self.vllm_config.parallel_config.worker_cls)
         else:
             logger.warning(
                 "passing worker_cls as a class object is strongly deprecated,"
@@ -572,6 +573,7 @@ class WorkerWrapperBase:
         if self.vllm_config.parallel_config.worker_extension_cls:
             worker_extension_cls = resolve_obj_by_qualname(
                 self.vllm_config.parallel_config.worker_extension_cls)
+            print(self.vllm_config.parallel_config.worker_extension_cls)
             extended_calls = []
             if worker_extension_cls not in worker_class.__bases__:
                 # check any conflicts between worker and worker_extension_cls
