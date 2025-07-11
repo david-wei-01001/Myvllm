@@ -71,6 +71,7 @@ def create_spec_worker(*args, **kwargs) -> "SpecDecodeWorker":
     target_worker_config = copy.deepcopy(vllm_config)
     target_worker_config.parallel_config.worker_cls =\
         target_worker_config.parallel_config.sd_worker_cls
+    logger.info(target_worker_config.parallel_config.worker_cls)
     cls = resolve_obj_by_qualname(
         target_worker_config.parallel_config.worker_cls)
     target_worker = cls(*args, **kwargs)
@@ -311,6 +312,7 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
         self.proposer_worker = proposer_worker
         self.scorer_worker = scorer_worker
         scorer_runner = getattr(self.scorer_worker, "model_runner", None)
+        logger.info(scorer_runner)
         self.generators = scorer_runner.get_generators(
         ) if scorer_runner else None
         self.disable_by_batch_size = disable_by_batch_size or float("inf")
