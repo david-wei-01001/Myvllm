@@ -1300,6 +1300,7 @@ class LLMEngine:
                 seq_group_metadata_list
         ) and not self._skip_scheduling_next_step:
             # Schedule iteration
+            logger.info("has remaining steps")
             (seq_group_metadata_list, scheduler_outputs,
              allow_async_output_proc
              ) = self.scheduler[virtual_engine].schedule()
@@ -1338,6 +1339,7 @@ class LLMEngine:
             # For supporting PP this is probably the best way to pass the
             # sampled_token_ids, as a separate broadcast over all the PP stages
             # will cause one virtual engine's microbatch to block the pipeline.
+            logger.info("scheduler_outputs is not empty")
             last_sampled_token_ids = \
                 self._get_last_sampled_token_ids(virtual_engine)
 
@@ -1358,9 +1360,11 @@ class LLMEngine:
                     virtual_engine]
 
             try:
+                logger.info("Maybe real loop")
                 outputs = self.model_executor.execute_model(
                     execute_model_req=execute_model_req)
                 self._skip_scheduling_next_step = False
+                logger.info(outputs)
             except InputProcessingError as e:
                 # The input for this request cannot be processed, so we must
                 # abort it. If there are remaining requests in the batch that
@@ -1382,6 +1386,7 @@ class LLMEngine:
         else:
             # Nothing scheduled => If there is pending async postprocessor,
             # then finish it here.
+            logger.info("Empty scheduler_outputs")
             if len(ctx.output_queue) > 0:
                 self._process_model_outputs(ctx=ctx)
             # No outputs in this case
@@ -1389,11 +1394,13 @@ class LLMEngine:
 
         # Finish the current step for all the sequence groups.
         if self.scheduler_config.is_multi_step:
+            logger.info("self.scheduler_config.is_multi_step")    
             for seq_group in seq_group_metadata_list:
                 seq_group.finish_step()
 
         if not self._has_remaining_steps(seq_group_metadata_list):
             # clear the cache if we have finished all the steps.
+            logger.info("has no remaining steps")
             if self.scheduler_config.is_multi_step:
                 self.cached_scheduler_outputs[0] = SchedulerOutputState()
 
@@ -1430,6 +1437,7 @@ class LLMEngine:
                 self.do_tracing(scheduler_outputs)
         else:
             # Multi-step case
+            logger.info("multi-step?")
             return ctx.request_outputs
 
         if not self.has_unfinished_requests():
