@@ -93,6 +93,8 @@ class Worker(LocalOrDistributedWorkerBase):
         if model_runner_cls is not None:
             self.model_runner = model_runner_cls(self.model_runner)
 
+        logger.info(f"Using model runner: {self.model_runner.__class__}")
+
         # Uninitialized cache engine. Will be initialized by
         # initialize_cache.
         self.cache_engine: List[CacheEngine]
