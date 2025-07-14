@@ -813,15 +813,15 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 proposals,
             )
 
-        # logger.info("Here is the scored")
-        # logger.info(proposal_scores)
+        logger.info("Here is the scored")
+        logger.info(proposal_scores)
 
-        logger.info("\n--- Accepted tokens per sequence ---")
-        for b, tid in enumerate(accepted_token_ids):
-            tok = tokenizer.decode([int(tid)])
-            logp = float(target_logprobs[b]) if target_logprobs is not None else None
-            logger.info(f"Sequence {b}: accepted {tok!r} (id {tid})"
-                  + (f" with target log‑prob {logp:.4f}" if logp is not None else ""))
+        # logger.info("\n--- Accepted tokens per sequence ---")
+        # for b, tid in enumerate(accepted_token_ids):
+        #     tok = tokenizer.decode([int(tid)])
+        #     logp = float(target_logprobs[b]) if target_logprobs is not None else None
+        #     logger.info(f"Sequence {b}: accepted {tok!r} (id {tid})"
+        #           + (f" with target log‑prob {logp:.4f}" if logp is not None else ""))
 
         _, (non_spec_seqs, non_spec_indices) = split_batch_by_proposal_len(
             execute_model_req.seq_group_metadata_list, proposals.proposal_lens)
