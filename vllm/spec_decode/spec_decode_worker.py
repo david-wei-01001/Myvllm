@@ -786,6 +786,7 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
             # Generate proposals using draft worker.
             proposals = self.proposer_worker.get_spec_proposals(
                 execute_model_req, self._seq_with_bonus_token_in_last_step)
+        logger.info("Here is the proposed")
         logger.info(proposals)
 
         if not self._allow_zero_draft_token_step and proposals.no_proposals:
@@ -801,6 +802,8 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 proposals,
             )
 
+        logger.info("Here is the scored")
+        logger.info(proposal_scores)
         _, (non_spec_seqs, non_spec_indices) = split_batch_by_proposal_len(
             execute_model_req.seq_group_metadata_list, proposals.proposal_lens)
         # With prefill chunking enabled, `non_spec_seqs` contains prefills too:
