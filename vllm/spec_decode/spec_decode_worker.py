@@ -786,8 +786,19 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
             # Generate proposals using draft worker.
             proposals = self.proposer_worker.get_spec_proposals(
                 execute_model_req, self._seq_with_bonus_token_in_last_step)
-        logger.info("Here is the proposed")
-        logger.info(proposals)
+        # logger.info("Here is the proposed")
+        # logger.info(proposals)
+        # 1) Top‑10 from the draft distributions
+        batch_size, k, vocab_size = proposals.proposal_probs.shape
+        for b in range(batch_size):
+            logger.info(f"\n--- Batch item {b} draft distributions ---")
+            for i in range(k):
+                dist = proposals.proposal_probs[b, i]            # shape: (vocab_size,)
+                top_probs, top_ids = torch.topk(dist, k=10)      # top-10 log‑probs and ids
+                toks = tokenizer.convert_ids_to_tokens(top_ids.tolist())
+                logger.info(f"Lookahead slot {i}:")
+                for rank, (tid, tok, prob) in enumerate(zip(top_ids.tolist(), toks, top_probs.tolist()), start=1):
+                    logger.info(f"  {rank:>2}. {tok:>12} (id {tid:>6}) → log‑prob {prob:.4f}")
 
         if not self._allow_zero_draft_token_step and proposals.no_proposals:
             #TODO: Fix it #5814
@@ -802,8 +813,16 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 proposals,
             )
 
-        logger.info("Here is the scored")
-        logger.info(proposal_scores)
+        # logger.info("Here is the scored")
+        # logger.info(proposal_scores)
+
+        logger.info("\n--- Accepted tokens per sequence ---")
+        for b, tid in enumerate(accepted_token_ids):
+            tok = tokenizer.decode([int(tid)])
+            logp = float(target_logprobs[b]) if target_logprobs is not None else None
+            logger.info(f"Sequence {b}: accepted {tok!r} (id {tid})"
+                  + (f" with target log‑prob {logp:.4f}" if logp is not None else ""))
+
         _, (non_spec_seqs, non_spec_indices) = split_batch_by_proposal_len(
             execute_model_req.seq_group_metadata_list, proposals.proposal_lens)
         # With prefill chunking enabled, `non_spec_seqs` contains prefills too:
