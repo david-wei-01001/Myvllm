@@ -786,6 +786,7 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
             # Generate proposals using draft worker.
             proposals = self.proposer_worker.get_spec_proposals(
                 execute_model_req, self._seq_with_bonus_token_in_last_step)
+        logger.info(proposals)
 
         if not self._allow_zero_draft_token_step and proposals.no_proposals:
             #TODO: Fix it #5814
