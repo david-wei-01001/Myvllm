@@ -4,6 +4,7 @@ psutil
 sentencepiece  # Required for LLaMA tokenizer.
 numpy
 requests >= 2.26.0
+scikit-learn
 tqdm
 blake3
 py-cpuinfo
