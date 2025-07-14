@@ -795,10 +795,10 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
             for i in range(k):
                 dist = proposals.proposal_probs[b, i]            # shape: (vocab_size,)
                 top_probs, top_ids = torch.topk(dist, k=10)      # top-10 log‑probs and ids
-                toks = tokenizer.convert_ids_to_tokens(top_ids.tolist())
+                # toks = tokenizer.convert_ids_to_tokens(top_ids.tolist())
                 logger.info(f"Lookahead slot {i}:")
-                for rank, (tid, tok, prob) in enumerate(zip(top_ids.tolist(), toks, top_probs.tolist()), start=1):
-                    logger.info(f"  {rank:>2}. {tok:>12} (id {tid:>6}) → log‑prob {prob:.4f}")
+                for rank, (tid, prob) in enumerate(zip(top_ids.tolist(), top_probs.tolist()), start=1):
+                    logger.info(f"  {rank:>2}. (id {tid:>6}) → log‑prob {prob:.4f}")
 
         if not self._allow_zero_draft_token_step and proposals.no_proposals:
             #TODO: Fix it #5814
