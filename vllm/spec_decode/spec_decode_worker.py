@@ -816,6 +816,10 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
         logger.info("Here is the scored")
         logger.info(proposal_scores)
 
+        logger.info("Here is the scored")
+        logger.info("probs tensor: %s", proposal_scores.probs)
+        logger.info("token_ids tensor: %s", proposal_scores.token_ids)
+
         # logger.info("\n--- Accepted tokens per sequence ---")
         # for b, tid in enumerate(accepted_token_ids):
         #     tok = tokenizer.decode([int(tid)])
