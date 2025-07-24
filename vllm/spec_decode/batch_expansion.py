@@ -83,16 +83,18 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
                 seq_group_metadata_list=target_seq_group_metadata_list))
         assert len(target_sampler_output) == 1, "expected single-step output"
         target_sampler_output = target_sampler_output[0]
-
+        logger.info(target_sampler_output)
         if not non_spec_indices:
+            loggger.debug("branch 1")
             # All sequence groups in batch have spec decoding enabled
-            return self._contract_batch_all_spec(
+            debug_output = self._contract_batch_all_spec(
                 target_sampler_output=target_sampler_output,
                 proposals=proposals,
             )
         else:
+            loggger.debug("branch 1")
             # Batch has a mix of spec decode enabled and disabled seq groups
-            return self._contract_batch(
+            debug_output = self._contract_batch(
                 execute_model_req.seq_group_metadata_list,
                 target_sampler_output=target_sampler_output,
                 proposals=proposals,
@@ -101,6 +103,8 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
                 spec_indices=spec_indices,
                 k=execute_model_req.num_lookahead_slots,
             )
+        logger.debug(debug_output)
+        return debug_output
 
     def _expand_batch(
         self,
