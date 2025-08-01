@@ -87,7 +87,7 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
         target_sampler_output = target_sampler_output[0]
         logger.info(target_sampler_output)
         if not non_spec_indices:
-            loggger.debug("branch 1")
+            logger.debug("branch 1")
             # All sequence groups in batch have spec decoding enabled
             debug_output = self._contract_batch_all_spec(
                 target_sampler_output=target_sampler_output,
