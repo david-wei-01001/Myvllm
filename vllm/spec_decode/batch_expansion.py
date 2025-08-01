@@ -94,7 +94,7 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
                 proposals=proposals,
             )
         else:
-            loggger.debug("branch 1")
+            loggger.debug("branch 2")
             # Batch has a mix of spec decode enabled and disabled seq groups
             debug_output = self._contract_batch(
                 execute_model_req.seq_group_metadata_list,
