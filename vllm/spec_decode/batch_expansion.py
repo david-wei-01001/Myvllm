@@ -6,7 +6,7 @@ from itertools import chain, count
 from typing import Iterator, List, Optional, Tuple
 
 import torch
-
+from vllm.logger import init_logger
 from vllm import SamplingParams
 from vllm.model_executor.layers.sampler import SamplerOutput
 from vllm.sequence import (VLLM_INVALID_TOKEN_ID, VLLM_TOKEN_ID_ARRAY_TYPE,
@@ -21,6 +21,8 @@ TargetSeqId = int
 TokenId = int
 
 DEFAULT_SIMPLE_SAMPLING_PARAMS = SamplingParams()
+
+logger = init_logger(__name__)
 
 
 class BatchExpansionTop1Scorer(SpeculativeScorer):
