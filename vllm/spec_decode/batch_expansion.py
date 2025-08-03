@@ -106,6 +106,20 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
                 k=execute_model_req.num_lookahead_slots,
             )
         logger.debug(debug_output)
+        probs  = debug_output.probs[0]      # → [6, V]
+        toks   = debug_output.token_ids[0]  # → [6]
+        
+        for idx, (tok, prob_vec) in enumerate(zip(toks, probs)):
+            # move to CPU & convert to list so it’s JSON‐serializable
+          if idx >= 3:
+            break
+          entry = {
+              "index":     idx,
+              "token_id":  tok.item(),
+              "probs":     prob_vec.cpu().tolist(),
+          }
+          # log the whole thing as one JSON blob at WARNING
+          logger.warning(json.dumps(entry))
         return debug_output
 
     def _expand_batch(
