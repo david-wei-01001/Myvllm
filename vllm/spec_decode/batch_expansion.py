@@ -4,7 +4,7 @@
 from array import array
 from itertools import chain, count
 from typing import Iterator, List, Optional, Tuple
-
+import json
 import torch
 from vllm.logger import init_logger
 from vllm import SamplingParams
