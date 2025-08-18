@@ -116,7 +116,7 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
           entry = {
               "index":     idx,
               "token_id":  tok.item(),
-              "probs":     prob_vec.cpu().tolist()[:3],
+              "probs":     prob_vec.cpu().tolist(),
           }
           # log the whole thing as one JSON blob at WARNING
           logger.warning(json.dumps(entry))
