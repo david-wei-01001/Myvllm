@@ -796,7 +796,7 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 dist = proposals.proposal_probs[b, i]            # shape: (vocab_size,)
                 top_probs, top_ids = torch.topk(dist, k=10)      # top-10 log‑probs and ids
                 # toks = tokenizer.convert_ids_to_tokens(top_ids.tolist())
-                logger.info(f"Lookahead slot {i}:")
+                logger.warning(f"Lookahead slot {i}:")
                 count = 0
                 for rank, (tid, prob) in enumerate(zip(top_ids.tolist(), top_probs.tolist()), start=1):
                     if count >= 5:
@@ -817,12 +817,12 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 proposals,
             )
 
-        logger.info("Here is the scored")
-        logger.info(proposal_scores)
+        # logger.info("Here is the scored")
+        # logger.info(proposal_scores)
 
-        logger.info("Here is the scored")
-        logger.info("probs tensor: %s", proposal_scores.probs)
-        logger.info("token_ids tensor: %s", proposal_scores.token_ids)
+        # logger.info("Here is the scored")
+        # logger.info("probs tensor: %s", proposal_scores.probs)
+        # logger.info("token_ids tensor: %s", proposal_scores.token_ids)
 
         # logger.info("\n--- Accepted tokens per sequence ---")
         # for b, tid in enumerate(accepted_token_ids):
