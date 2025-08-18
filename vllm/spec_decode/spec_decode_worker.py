@@ -791,7 +791,7 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
         # 1) Top‑10 from the draft distributions
         batch_size, k, vocab_size = proposals.proposal_probs.shape
         for b in range(batch_size):
-            logger.info(f"\n--- Batch item {b} draft distributions ---")
+            logger.warning(f"\n--- Batch item {b} draft distributions ---")
             for i in range(k):
                 dist = proposals.proposal_probs[b, i]            # shape: (vocab_size,)
                 top_probs, top_ids = torch.topk(dist, k=10)      # top-10 log‑probs and ids
@@ -799,9 +799,9 @@ class SpecDecodeWorker(LoRANotSupportedWorkerBase):
                 logger.info(f"Lookahead slot {i}:")
                 count = 0
                 for rank, (tid, prob) in enumerate(zip(top_ids.tolist(), top_probs.tolist()), start=1):
-                    if count >= 2:
+                    if count >= 5:
                       break
-                    logger.info(f"  {rank:>2}. (id {tid:>6}) → log‑prob {prob:.4f}")
+                    logger.warning(f"  {rank:>2}. (id {tid:>6}) → log‑prob {prob:.4f}")
                     count += 1
 
         if not self._allow_zero_draft_token_step and proposals.no_proposals:
