@@ -111,8 +111,8 @@ class BatchExpansionTop1Scorer(SpeculativeScorer):
         
         for idx, (tok, prob_vec) in enumerate(zip(toks, probs)):
             # move to CPU & convert to list so it’s JSON‐serializable
-          if idx >= 3:
-            break
+          # if idx >= 3:
+          #   break
           entry = {
               "index":     idx,
               "token_id":  tok.item(),
